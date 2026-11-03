@@ -29,13 +29,11 @@ system_message = {
 
 
 # Функція спілкування з AI
-
 def chat_with_ai(message, history):
 
     history = history or []
 
     conversation = [system_message]
-
     conversation.extend(history)
 
     conversation.append({
@@ -56,41 +54,6 @@ def chat_with_ai(message, history):
         {"role": "user", "content": message},
         {"role": "assistant", "content": answer}
     ]
-
-    return "", updated_history, updated_history
-
-
-
-    history = history or []
-
-    conversation = [system_message]
-
-    for user_message, assistant_message in history:
-        conversation.append({
-            "role": "user",
-            "content": user_message
-        })
-
-        conversation.append({
-            "role": "assistant",
-            "content": assistant_message
-        })
-
-    conversation.append({
-        "role": "user",
-        "content": message
-    })
-
-    response = client.chat.completions.create(
-        model="openai/gpt-oss-20b",
-        messages=conversation,
-        temperature=0.7,
-        max_tokens=1000
-    )
-
-    answer = response.choices[0].message.content
-
-    updated_history = history + [(message, answer)]
 
     return "", updated_history, updated_history
 
@@ -150,6 +113,8 @@ with gr.Blocks(title="Smart Assistant AI") as demo:
 # Запуск
 if __name__ == "__main__":
     demo.launch(
+        server_name="0.0.0.0",
+        server_port=int(os.environ.get("PORT", 10000)),
         theme=gr.themes.Soft(
             primary_hue="purple",
             secondary_hue="violet",
